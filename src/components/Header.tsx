@@ -4,6 +4,8 @@ const links = [
   { href: "/admin", label: "Admin" },
   { href: "/admin/customers", label: "Customers" },
   { href: "/admin/subscriptions", label: "Subscriptions" },
+  { href: "/admin/seo", label: "SEO" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export function Header({ currentPath }: { currentPath: string }) {
