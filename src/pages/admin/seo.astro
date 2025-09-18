@@ -1,0 +1,298 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+const checklist = [
+  {
+    title: 'Craft a descriptive meta title',
+    description:
+      'Keep titles between 50-60 characters and include your primary keyword near the beginning.',
+  },
+  {
+    title: 'Write a compelling meta description',
+    description:
+      'Summarize the page in 150-160 characters and highlight a clear call to action for searchers.',
+  },
+  {
+    title: 'Specify a canonical URL',
+    description:
+      'Avoid duplicate content issues by pointing search engines to the preferred page URL.',
+  },
+  {
+    title: 'Provide structured data',
+    description:
+      'Help search engines understand your content by adding JSON-LD that matches your business type.',
+  },
+  {
+    title: 'Optimize for social sharing',
+    description:
+      'Ensure Open Graph and Twitter Card tags accurately reflect how the page should appear when shared.',
+  },
+];
+
+const schemaExample = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Acme SaaS Platform',
+  url: 'https://example.com',
+  logo: 'https://example.com/assets/logo.png',
+  sameAs: [
+    'https://www.linkedin.com/company/acme',
+    'https://twitter.com/acme',
+  ],
+};
+---
+
+<Layout title="SEO">
+  <div class="grid gap-6 xl:grid-cols-[2fr,1fr]">
+    <section class="space-y-6">
+      <form class="space-y-6" onSubmit="event.preventDefault()">
+        <div class="rounded-xl border bg-card text-card-foreground shadow">
+          <div class="p-6 space-y-6">
+            <div class="space-y-1">
+              <h3 class="text-xl font-semibold leading-none tracking-tight">Meta tags</h3>
+              <p class="text-sm text-muted-foreground">
+                Control the title and description that appear in search engine result pages.
+              </p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <label class="text-sm font-medium leading-none" for="meta-title">
+                  Meta title
+                </label>
+                <input
+                  id="meta-title"
+                  name="meta-title"
+                  placeholder="Acme SaaS Platform — Modern billing automation"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                  maxlength="60"
+                />
+                <p class="text-xs text-muted-foreground">
+                  Aim for fewer than 60 characters so the full title displays on desktop and mobile SERPs.
+                </p>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-medium leading-none" for="focus-keyword">
+                  Primary keyword
+                </label>
+                <input
+                  id="focus-keyword"
+                  name="focus-keyword"
+                  placeholder="subscription analytics platform"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+                <p class="text-xs text-muted-foreground">
+                  Choose one highly relevant keyword to anchor your on-page optimization.
+                </p>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none" for="meta-description">
+                Meta description
+              </label>
+              <textarea
+                id="meta-description"
+                name="meta-description"
+                rows="4"
+                placeholder="Modern tooling to manage customer subscriptions, automate billing, and surface actionable revenue insights."
+                class="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                maxlength="160"
+              />
+              <p class="text-xs text-muted-foreground">
+                Descriptions between 150-160 characters provide enough context for searchers without truncation.
+              </p>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none" for="canonical-url">
+                Canonical URL
+              </label>
+              <input
+                id="canonical-url"
+                name="canonical-url"
+                placeholder="https://example.com/features"
+                class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2 border-t bg-muted/40 px-6 py-4">
+            <button
+              type="reset"
+              class="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Reset
+            </button>
+            <button
+              type="submit"
+              class="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Save changes
+            </button>
+          </div>
+        </div>
+
+        <div class="rounded-xl border bg-card text-card-foreground shadow">
+          <div class="p-6 space-y-6">
+            <div class="space-y-1">
+              <h3 class="text-xl font-semibold leading-none tracking-tight">Open Graph &amp; social</h3>
+              <p class="text-sm text-muted-foreground">
+                Define how this page should appear when shared on social networks and messaging apps.
+              </p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <label class="text-sm font-medium leading-none" for="og-title">
+                  Open Graph title
+                </label>
+                <input
+                  id="og-title"
+                  name="og-title"
+                  placeholder="Streamline SaaS billing with Acme"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-medium leading-none" for="twitter-handle">
+                  Twitter handle
+                </label>
+                <input
+                  id="twitter-handle"
+                  name="twitter-handle"
+                  placeholder="@acme_saas"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+                />
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none" for="og-description">
+                Open Graph description
+              </label>
+              <textarea
+                id="og-description"
+                name="og-description"
+                rows="3"
+                placeholder="Give your growth team a single source of truth for subscription performance."
+                class="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none" for="og-image">
+                Social image URL
+              </label>
+              <input
+                id="og-image"
+                name="og-image"
+                placeholder="https://example.com/assets/social-card.png"
+                class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+              <p class="text-xs text-muted-foreground">
+                Recommended aspect ratio 1200×630 for Open Graph and 800×418 for Twitter cards.
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center justify-end gap-2 border-t bg-muted/40 px-6 py-4">
+            <button
+              type="button"
+              class="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Preview share card
+            </button>
+            <button
+              type="submit"
+              class="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            >
+              Save social data
+            </button>
+          </div>
+        </div>
+      </form>
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <div class="rounded-xl border bg-card text-card-foreground shadow">
+          <div class="p-6 space-y-4">
+            <div class="space-y-1">
+              <h3 class="text-xl font-semibold leading-none tracking-tight">Search result preview</h3>
+              <p class="text-sm text-muted-foreground">
+                Quickly validate how your metadata will render in Google before publishing changes.
+              </p>
+            </div>
+
+            <div class="rounded-lg border bg-background p-4">
+              <p class="text-xs text-muted-foreground">https://example.com/features</p>
+              <p class="mt-1 text-lg text-blue-500 dark:text-blue-400">
+                Acme SaaS Platform — Modern billing automation
+              </p>
+              <p class="mt-1 text-sm text-muted-foreground">
+                Modern tooling to manage customer subscriptions, automate billing, and surface actionable revenue insights.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="rounded-xl border bg-card text-card-foreground shadow">
+          <div class="p-6 space-y-4">
+            <div class="space-y-1">
+              <h3 class="text-xl font-semibold leading-none tracking-tight">Structured data</h3>
+              <p class="text-sm text-muted-foreground">
+                Provide JSON-LD markup to unlock rich results and enhance your brand presence in search.
+              </p>
+            </div>
+            <textarea
+              class="flex min-h-[200px] w-full rounded-md border border-input bg-muted/30 px-3 py-2 font-mono text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              readonly
+            >{JSON.stringify(schemaExample, null, 2)}</textarea>
+            <p class="text-xs text-muted-foreground">
+              Customize the sample to match your product details, then embed it in the &lt;head&gt; of your marketing pages.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="space-y-6">
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+        <div class="p-6 space-y-4">
+          <div class="space-y-1">
+            <h3 class="text-xl font-semibold leading-none tracking-tight">Optimization checklist</h3>
+            <p class="text-sm text-muted-foreground">
+              Track the essentials your team should review before shipping new pages.
+            </p>
+          </div>
+
+          <ol class="space-y-4">
+            {checklist.map((item) => (
+              <li class="space-y-1" aria-label={item.title}>
+                <p class="text-sm font-medium text-foreground">{item.title}</p>
+                <p class="text-xs text-muted-foreground">{item.description}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+        <div class="p-6 space-y-4">
+          <div class="space-y-1">
+            <h3 class="text-xl font-semibold leading-none tracking-tight">Next steps</h3>
+            <p class="text-sm text-muted-foreground">
+              Connect these settings to your build pipeline so metadata deploys alongside content updates.
+            </p>
+          </div>
+
+          <ul class="space-y-3 text-sm text-muted-foreground">
+            <li>• Map fields to your CMS or configuration store.</li>
+            <li>• Generate the sitemap automatically during deployment.</li>
+            <li>• Validate metadata with tools like Google Lighthouse.</li>
+            <li>• Monitor impressions with Google Search Console reports.</li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+</Layout>

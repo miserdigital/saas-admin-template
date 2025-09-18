@@ -1,0 +1,258 @@
+---
+import Layout from '@/layouts/Layout.astro';
+
+const deploymentSteps = [
+  'Create a Worker secret so the key never ships in client-side bundles.',
+  'Expose the secret to your API routes through the runtime bindings.',
+  'Use the key to authenticate requests to Google\'s Generative Language APIs.',
+  'Rotate the credential regularly and update monitoring alerts.',
+];
+
+const helpfulLinks = [
+  {
+    label: 'Google AI Studio',
+    href: 'https://aistudio.google.com/',
+    description: 'Generate API keys and review usage analytics for Google\'s models.',
+  },
+  {
+    label: 'Model selection guide',
+    href: 'https://ai.google.dev/gemini-api/docs/models',
+    description: 'Compare Gemini model capabilities, contexts, and rate limits.',
+  },
+  {
+    label: 'Cloudflare Workers secrets',
+    href: 'https://developers.cloudflare.com/workers/configuration/secrets/',
+    description: 'Store sensitive credentials server-side with simple CLI commands.',
+  },
+];
+---
+
+<Layout title="Settings">
+  <div class="grid gap-6 xl:grid-cols-[2fr,1fr]">
+    <section class="space-y-6">
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+        <div class="p-6 space-y-6">
+          <div class="space-y-1">
+            <h3 class="text-xl font-semibold leading-none tracking-tight">Google AI LLM integration</h3>
+            <p class="text-sm text-muted-foreground">
+              Configure the credential and runtime defaults required to call Google\'s Gemini models from your workflows.
+            </p>
+          </div>
+
+          <form id="google-ai-form" class="space-y-6">
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none" for="google-ai-key">
+                API key
+              </label>
+              <input
+                id="google-ai-key"
+                name="google-ai-key"
+                type="password"
+                autocomplete="off"
+                placeholder="AIzaSyD..."
+                class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+              <p class="text-xs text-muted-foreground">
+                Keys generated in Google AI Studio start with <code class="font-mono text-xs">AI</code> and should be treated as secrets.
+              </p>
+            </div>
+
+            <div class="grid gap-4 sm:grid-cols-2">
+              <div class="space-y-2">
+                <label class="text-sm font-medium leading-none" for="google-model">
+                  Default model
+                </label>
+                <select
+                  id="google-model"
+                  name="google-model"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+                  <option value="gemini-1.5-flash" selected>Gemini 1.5 Flash</option>
+                  <option value="gemini-2.0-flash-exp">Gemini 2.0 Flash (Experimental)</option>
+                </select>
+              </div>
+
+              <div class="space-y-2">
+                <label class="text-sm font-medium leading-none" for="google-region">
+                  Region
+                </label>
+                <select
+                  id="google-region"
+                  name="google-region"
+                  class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <option value="us-east1">us-east1</option>
+                  <option value="us-central1">us-central1</option>
+                  <option value="europe-west1">europe-west1</option>
+                  <option value="asia-northeast1">asia-northeast1</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="space-y-2">
+              <label class="text-sm font-medium leading-none" for="google-instructions">
+                System instruction
+              </label>
+              <textarea
+                id="google-instructions"
+                name="google-instructions"
+                rows="4"
+                placeholder="You are an assistant that helps the support team summarize conversations before escalation."
+                class="flex w-full rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+              />
+              <p class="text-xs text-muted-foreground">
+                Persist prompt templates in your database or worker KV so automations stay consistent across requests.
+              </p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-3">
+              <button
+                type="submit"
+                class="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              >
+                Save API configuration
+              </button>
+              <button
+                type="reset"
+                class="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                Clear values
+              </button>
+              <span
+                data-status
+                class="hidden text-xs font-medium text-emerald-500"
+                role="status"
+                aria-live="polite"
+              >
+                API key saved to this browser.
+              </span>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+        <div class="p-6 space-y-4">
+          <div class="space-y-1">
+            <h3 class="text-xl font-semibold leading-none tracking-tight">Local testing</h3>
+            <p class="text-sm text-muted-foreground">
+              Use the saved credential while prototyping flows directly in the dashboard without deploying new secrets.
+            </p>
+          </div>
+
+          <div class="space-y-4 text-sm text-muted-foreground">
+            <p>
+              The form above stores the key in <code class="font-mono text-xs">localStorage</code> so it\'s only available on this device. When you\'re ready for production, promote the key to a Worker secret instead of relying on client storage.
+            </p>
+
+            <div class="rounded-lg border bg-muted/40 p-4">
+              <p class="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Wrangler CLI</p>
+              <pre class="mt-2 overflow-x-auto rounded-md bg-background p-4 text-xs font-mono">
+wrangler secret put GOOGLE_AI_API_KEY
+              </pre>
+              <p class="mt-2 text-xs text-muted-foreground">
+                Access the secret in your Worker via <code class="font-mono text-xs">env.GOOGLE_AI_API_KEY</code> and forward it to API routes or workflows as needed.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <aside class="space-y-6">
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+        <div class="p-6 space-y-4">
+          <div class="space-y-1">
+            <h3 class="text-xl font-semibold leading-none tracking-tight">Deployment checklist</h3>
+            <p class="text-sm text-muted-foreground">
+              Ensure the integration is production ready before enabling AI features for customers.
+            </p>
+          </div>
+
+          <ol class="space-y-3 text-sm text-muted-foreground">
+            {deploymentSteps.map((step) => (
+              <li class="flex gap-3">
+                <span class="mt-1 h-2 w-2 rounded-full bg-primary" />
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
+
+      <div class="rounded-xl border bg-card text-card-foreground shadow">
+        <div class="p-6 space-y-4">
+          <div class="space-y-1">
+            <h3 class="text-xl font-semibold leading-none tracking-tight">Helpful resources</h3>
+            <p class="text-sm text-muted-foreground">
+              Continue refining your implementation with the latest guidance from Google and Cloudflare.
+            </p>
+          </div>
+
+          <ul class="space-y-4 text-sm">
+            {helpfulLinks.map((link) => (
+              <li class="space-y-1">
+                <a
+                  class="font-medium text-primary underline-offset-4 hover:underline"
+                  href={link.href}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {link.label}
+                </a>
+                <p class="text-xs text-muted-foreground">{link.description}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script is:inline>
+    if (typeof window !== 'undefined') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('google-ai-form');
+        if (!form) {
+          return;
+        }
+
+        const input = form.querySelector('input[name="google-ai-key"]');
+        const status = form.querySelector('[data-status]');
+
+        if (input) {
+          const savedKey = window.localStorage.getItem('googleAiLlmApiKey') ?? '';
+          if (savedKey) {
+            input.value = savedKey;
+          }
+        }
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+
+          if (!input) {
+            return;
+          }
+
+          const trimmed = input.value.trim();
+          if (trimmed) {
+            window.localStorage.setItem('googleAiLlmApiKey', trimmed);
+            if (status) {
+              status.textContent = 'API key saved locally. Promote it to a Worker secret before deploying.';
+              status.classList.remove('hidden', 'text-rose-500');
+              status.classList.add('text-emerald-500');
+            }
+          } else {
+            window.localStorage.removeItem('googleAiLlmApiKey');
+            if (status) {
+              status.textContent = 'Enter a key before saving so the dashboard can reuse it.';
+              status.classList.remove('hidden', 'text-emerald-500');
+              status.classList.add('text-rose-500');
+            }
+          }
+        });
+      });
+    }
+  </script>
+</Layout>
